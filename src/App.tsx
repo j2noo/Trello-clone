@@ -1,7 +1,6 @@
 import React from "react";
 import { createGlobalStyle } from "styled-components";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { hourSelector, minuteState } from "./atoms";
 const GlobalStyle = createGlobalStyle`
 /* http://meyerweb.com/eric/tools/css/reset/
    v5.0.1 | 20191019
@@ -60,19 +59,9 @@ table {
 `;
 
 function App() {
-  const [minutes, setMinutes] = useRecoilState(minuteState);
-  const [hours, setHours] = useRecoilState(hourSelector);
-  const onMinutesChange = (event: React.FormEvent<HTMLInputElement>) => {
-    setMinutes(Number(event.currentTarget.value));
-  };
-  const onHoursChange = (event: React.FormEvent<HTMLInputElement>) => {
-    setHours(Number(event.currentTarget.value));
-  };
   return (
     <>
       <GlobalStyle></GlobalStyle>
-      <input value={minutes} onChange={onMinutesChange} type="number" placeholder="Minute"></input>
-      <input value={hours} onChange={onHoursChange} type="number" placeholder="Hour"></input>
     </>
   );
 }
