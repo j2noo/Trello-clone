@@ -1,6 +1,7 @@
 import React from "react";
 import { createGlobalStyle } from "styled-components";
 import { useRecoilState, useRecoilValue } from "recoil";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 const GlobalStyle = createGlobalStyle`
 /* http://meyerweb.com/eric/tools/css/reset/
    v5.0.1 | 20191019
@@ -59,9 +60,36 @@ table {
 `;
 
 function App() {
+  const onDragEnd = () => {};
   return (
     <>
-      <GlobalStyle></GlobalStyle>
+      {/* <GlobalStyle></GlobalStyle> */}
+      <DragDropContext onDragEnd={onDragEnd}>
+        <div>
+          <Droppable droppableId="one">
+            {(provided) => (
+              <ul ref={provided.innerRef} {...provided.droppableProps}>
+                <Draggable draggableId="first" index={0}>
+                  {(provided) => (
+                    <li ref={provided.innerRef} {...provided.draggableProps}>
+                      <span {...provided.dragHandleProps}>🔥</span>
+                      One
+                    </li>
+                  )}
+                </Draggable>
+                <Draggable draggableId="second" index={1}>
+                  {(provided) => (
+                    <li ref={provided.innerRef} {...provided.draggableProps}>
+                      <span {...provided.dragHandleProps}>🔥</span>
+                      Two
+                    </li>
+                  )}
+                </Draggable>
+              </ul>
+            )}
+          </Droppable>
+        </div>
+      </DragDropContext>
     </>
   );
 }
