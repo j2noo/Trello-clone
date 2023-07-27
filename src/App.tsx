@@ -1,6 +1,8 @@
 import React from "react";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { DragDropContext, Draggable, Droppable, DropResult, OnDragEndResponder } from "react-beautiful-dnd";
+import { useRecoilState } from "recoil";
 import { styled } from "styled-components";
+import { toDoState } from "./atoms";
 
 const Wrapper = styled.div`
   display: flex;
@@ -28,16 +30,15 @@ const Card = styled.div`
   margin-bottom: 5px;
 `;
 
-const toDos = [
-  "모든 인류 구성원의 천부의 존엄성과 동등",
-  "폰트에서 원하는 폰트를 가져온다",
-  "index.tsx에서 React.StrictMode를 div로 변경",
-  "DWhereas a common understanding",
-  "E",
-];
-
 function App() {
-  const onDragEnd = () => {};
+  const [toDos, setToDos] = useRecoilState(toDoState);
+  const onDragEnd = ({ destination, source, draggableId }: DropResult) => {
+    if (!destination) return;
+    let newToDos = [...toDos];
+    newToDos.splice(source.index, 1);
+    newToDos.splice(destination?.index, 0, draggableId);
+    setToDos(newToDos);
+  };
   return (
     <>
       {/* <GlobalStyle></GlobalStyle> */}
@@ -48,7 +49,7 @@ function App() {
               {(provided) => (
                 <Board ref={provided.innerRef} {...provided.droppableProps}>
                   {toDos.map((toDo, index) => (
-                    <Draggable draggableId={toDo} index={index}>
+                    <Draggable key={toDo} draggableId={toDo} index={index}>
                       {(provided) => (
                         <Card ref={provided.innerRef} {...provided.dragHandleProps} {...provided.draggableProps}>
                           {toDo}
