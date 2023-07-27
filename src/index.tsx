@@ -59,7 +59,7 @@ table {
 }
 body {
   font-weight: 400;
-  font-family: 'Dongle', sans-serif;
+  font-family: 'Do Hyeon', sans-serif;
   background-color: ${(props) => props.theme.bgColor};
   color:black;
   line-height: 1.2;
