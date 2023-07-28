@@ -4,10 +4,11 @@ import { useRecoilState } from "recoil";
 import { styled } from "styled-components";
 import { toDoState } from "./atoms";
 import DraggableCard from "./Components/DrabbleCard";
+import Board from "./Components/Board";
 
 const Wrapper = styled.div`
   display: flex;
-  max-width: 480px;
+  max-width: 680px;
   width: 100%;
   margin: 0 auto;
   justify-content: center;
@@ -17,23 +18,18 @@ const Wrapper = styled.div`
 const Boards = styled.div`
   display: grid;
   width: 100%;
-  grid-template-columns: repeat(1, 1fr);
-`;
-const Board = styled.div`
-  padding: 30px 10px 20px 10px;
-  background-color: ${(props) => props.theme.boardColor};
-  border-radius: 5px;
-  min-height: 200px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
 `;
 
 function App() {
   const [toDos, setToDos] = useRecoilState(toDoState);
   const onDragEnd = ({ destination, source, draggableId }: DropResult) => {
     if (!destination) return;
-    let newToDos = [...toDos];
-    newToDos.splice(source.index, 1);
-    newToDos.splice(destination?.index, 0, draggableId);
-    setToDos(newToDos);
+    // let newToDos = [...toDos];
+    // newToDos.splice(source.index, 1);
+    // newToDos.splice(destination?.index, 0, draggableId);
+    // setToDos(newToDos);
   };
   return (
     <>
@@ -41,16 +37,9 @@ function App() {
       <DragDropContext onDragEnd={onDragEnd}>
         <Wrapper>
           <Boards>
-            <Droppable droppableId="one">
-              {(provided) => (
-                <Board ref={provided.innerRef} {...provided.droppableProps}>
-                  {toDos.map((toDo, index) => (
-                    <DraggableCard key={toDo} toDo={toDo} index={index}></DraggableCard>
-                  ))}
-                  {provided.placeholder}
-                </Board>
-              )}
-            </Droppable>
+            {Object.keys(toDos).map((boardId) => (
+              <Board key={boardId} toDos={toDos[boardId]} boardId={boardId}></Board>
+            ))}
           </Boards>
         </Wrapper>
       </DragDropContext>
