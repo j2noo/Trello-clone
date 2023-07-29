@@ -15,6 +15,5 @@ export const toDoState = atom<IToDoState>({
     ],
     Doing: [{ id: 11, text: "놀기" }],
     Done: [{ id: 113, text: "잠자기" }],
-    Done2: [{ id: 113, text: "잠자기" }],
   },
 });

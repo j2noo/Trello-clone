@@ -11,6 +11,7 @@ import { styled } from "styled-components";
 import { toDoState } from "./atoms";
 import DraggableCard from "./Components/DrabbleCard";
 import Board from "./Components/Board";
+import AddBoard from "./Components/AddBoard";
 
 const Wrapper = styled.div`
   display: flex;
@@ -81,7 +82,7 @@ function App() {
                 boardId={boardId}
               ></Board>
             ))}
-            
+            <AddBoard></AddBoard>
           </Boards>
         </Wrapper>
       </DragDropContext>
