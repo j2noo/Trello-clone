@@ -24,8 +24,28 @@ const Boards = styled.div`
 
 function App() {
   const [toDos, setToDos] = useRecoilState(toDoState);
-  const onDragEnd = ({ destination, source, draggableId }: DropResult) => {
-    if (!destination) return;
+  const onDragEnd = (info: DropResult) => {
+    if (!info.destination) return;
+    //지우고 반영, 붙여넣고 반영
+    console.log(info);
+    const toDos_target = [...toDos[info.source.droppableId]];
+    const toDos_dest = [...toDos[info.destination?.droppableId]];
+
+    toDos_target.splice(info.source.index, 1);
+
+    if (info.source.droppableId === info.destination?.droppableId) {
+      toDos_target.splice(info.destination?.index, 0, info.draggableId);
+      setToDos((oldToDos) => ({ ...oldToDos, [info.source.droppableId]: toDos_target }));
+    } else {
+      toDos_dest.splice(info.destination?.index, 0, info.draggableId);
+      setToDos((oldToDos) => ({
+        ...oldToDos,
+        [String(info.destination?.droppableId)]: toDos_dest,
+        [info.source.droppableId]: toDos_target,
+      }));
+    }
+
+    // toDos_dest.splice(info.destination?.index, 0, info.draggableId);
     // let newToDos = [...toDos];
     // newToDos.splice(source.index, 1);
     // newToDos.splice(destination?.index, 0, draggableId);
