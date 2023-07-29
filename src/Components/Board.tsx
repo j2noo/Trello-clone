@@ -3,6 +3,8 @@ import DraggableCard from "./DrabbleCard";
 import { styled } from "styled-components";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
+import { IToDo, toDoState } from "../atoms";
+import { useSetRecoilState } from "recoil";
 
 const Wrapper = styled.div`
   padding-top: 10px;
@@ -30,9 +32,12 @@ const Area = styled.div<IAreaProps>`
 `;
 const Form = styled.form`
   width: 100%;
+  input {
+    width: 100%;
+  }
 `;
 interface IBoardProps {
-  toDos: string[];
+  toDos: IToDo[];
   boardId: string;
 }
 interface IAreaProps {
@@ -44,16 +49,22 @@ interface IForm {
   toDo: string;
 }
 function Board({ toDos, boardId }: IBoardProps) {
+  const setToDos = useSetRecoilState(toDoState);
   const { register, setValue, handleSubmit } = useForm<IForm>();
-
+  const onValid = (data: IForm) => {
+    // console.log(data, toDos);
+    const newToDoArray = [...toDos, { id: Date.now(), text: data.toDo }];
+    setToDos((oldToDos) => ({ ...oldToDos, [boardId]: newToDoArray }));
+    setValue("toDo", "");
+  };
   return (
     <Wrapper>
       <Title>{boardId}</Title>
-      <Form>
+      <Form onSubmit={handleSubmit(onValid)}>
         <input
           type="text"
           placeholder={`${boardId}에 추가하세요`}
-          {...(register("toDo"), { required: true })}
+          {...register("toDo", { required: true })}
         ></input>
       </Form>
       <Droppable droppableId={boardId}>
@@ -66,8 +77,9 @@ function Board({ toDos, boardId }: IBoardProps) {
           >
             {toDos.map((toDo, index) => (
               <DraggableCard
-                key={toDo}
-                toDo={toDo}
+                key={toDo.id}
+                toDoText={toDo.text}
+                toDoId={toDo.id}
                 index={index}
               ></DraggableCard>
             ))}

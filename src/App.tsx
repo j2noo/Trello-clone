@@ -1,5 +1,11 @@
 import React from "react";
-import { DragDropContext, Draggable, Droppable, DropResult, OnDragEndResponder } from "react-beautiful-dnd";
+import {
+  DragDropContext,
+  Draggable,
+  Droppable,
+  DropResult,
+  OnDragEndResponder,
+} from "react-beautiful-dnd";
 import { useRecoilState } from "recoil";
 import { styled } from "styled-components";
 import { toDoState } from "./atoms";
@@ -31,13 +37,23 @@ function App() {
     const toDos_target = [...toDos[info.source.droppableId]];
     const toDos_dest = [...toDos[info.destination?.droppableId]];
 
-    toDos_target.splice(info.source.index, 1);
+    const movedToDo = toDos_target.splice(info.source.index, 1);
 
+    console.log(toDos_target);
     if (info.source.droppableId === info.destination?.droppableId) {
-      toDos_target.splice(info.destination?.index, 0, info.draggableId);
-      setToDos((oldToDos) => ({ ...oldToDos, [info.source.droppableId]: toDos_target }));
+      toDos_target.splice(info.destination?.index, 0, {
+        id: movedToDo[0].id,
+        text: movedToDo[0].text,
+      });
+      setToDos((oldToDos) => ({
+        ...oldToDos,
+        [info.source.droppableId]: toDos_target,
+      }));
     } else {
-      toDos_dest.splice(info.destination?.index, 0, info.draggableId);
+      toDos_dest.splice(info.destination?.index, 0, {
+        id: movedToDo[0].id,
+        text: movedToDo[0].text,
+      });
       setToDos((oldToDos) => ({
         ...oldToDos,
         [String(info.destination?.droppableId)]: toDos_dest,
@@ -58,7 +74,11 @@ function App() {
         <Wrapper>
           <Boards>
             {Object.keys(toDos).map((boardId) => (
-              <Board key={boardId} toDos={toDos[boardId]} boardId={boardId}></Board>
+              <Board
+                key={boardId}
+                toDos={toDos[boardId]}
+                boardId={boardId}
+              ></Board>
             ))}
           </Boards>
         </Wrapper>
