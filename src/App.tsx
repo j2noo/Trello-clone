@@ -18,13 +18,14 @@ const Wrapper = styled.div`
   width: 100%;
   margin: 0 auto;
   justify-content: center;
-  align-items: center;
+  align-items: start;
   height: 100vh;
 `;
 const Boards = styled.div`
   display: grid;
   width: 100%;
-  grid-template-columns: repeat(3, 1fr);
+  margin-top: 10vh;
+  grid-template-columns: repeat(4, 1fr);
   gap: 10px;
 `;
 
@@ -80,6 +81,7 @@ function App() {
                 boardId={boardId}
               ></Board>
             ))}
+            
           </Boards>
         </Wrapper>
       </DragDropContext>
