@@ -36,6 +36,9 @@ function App() {
     if (!info.destination) return;
     //지우고 반영, 붙여넣고 반영
     console.log(info);
+    // const targetBoardIdx = toDos.findIndex((toDo) =>
+    //   Object.keys(toDo).includes(info.source.droppableId)
+    // );
     const toDos_target = [...toDos[info.source.droppableId]];
     const toDos_dest = [...toDos[info.destination?.droppableId]];
 

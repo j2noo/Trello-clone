@@ -27,11 +27,11 @@ function AddBoard() {
       alert("이미 존재하는 카테고리 입니다!");
       return;
     }
-
-    setToDos((oldTodos) => ({
-      ...oldTodos,
-      [newCategory]: [],
-    }));
+    const newToDos = {
+      ...toDos,
+      [newCategory]: [{ id: 212, text: "테스트이빈다" }],
+    };
+    setToDos(newToDos);
   }
   return <Wrapper onClick={addClick}>➕</Wrapper>;
 }
