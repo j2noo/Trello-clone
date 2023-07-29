@@ -7,11 +7,17 @@ const Wrapper = styled.div`
   background-color: ${(props) => props.theme.boardColor};
   border-radius: 5px;
   min-height: 200px;
+  display: flex;
+  flex-direction: column;
 `;
 const Title = styled.div`
   margin-bottom: 10px;
   text-align: center;
   font-size: 30px;
+`;
+const Area = styled.div`
+  background-color: blue;
+  flex-grow: 1;
 `;
 interface IBoardProps {
   toDos: string[];
@@ -23,12 +29,12 @@ function Board({ toDos, boardId }: IBoardProps) {
       <Title>{boardId}</Title>
       <Droppable droppableId={boardId}>
         {(provided) => (
-          <div ref={provided.innerRef} {...provided.droppableProps}>
+          <Area ref={provided.innerRef} {...provided.droppableProps}>
             {toDos.map((toDo, index) => (
               <DraggableCard key={toDo} toDo={toDo} index={index}></DraggableCard>
             ))}
             {provided.placeholder}
-          </div>
+          </Area>
         )}
       </Droppable>
     </Wrapper>
