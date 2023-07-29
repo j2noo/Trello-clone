@@ -15,21 +15,31 @@ const Title = styled.div`
   text-align: center;
   font-size: 30px;
 `;
-const Area = styled.div`
-  background-color: blue;
+const Area = styled.div<IAreaProps>`
+  background-color: ${(props) => (props.isDraggingOver ? "pink" : props.isDraggingFromThis ? "red" : "blue")};
   flex-grow: 1;
+  transition: background-color 0.3s ease-in-out;
 `;
 interface IBoardProps {
   toDos: string[];
   boardId: string;
+}
+interface IAreaProps {
+  isDraggingFromThis: boolean;
+  isDraggingOver: boolean;
 }
 function Board({ toDos, boardId }: IBoardProps) {
   return (
     <Wrapper>
       <Title>{boardId}</Title>
       <Droppable droppableId={boardId}>
-        {(provided) => (
-          <Area ref={provided.innerRef} {...provided.droppableProps}>
+        {(provided, snapshot) => (
+          <Area
+            isDraggingOver={snapshot.isDraggingOver}
+            isDraggingFromThis={Boolean(snapshot.draggingFromThisWith)}
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+          >
             {toDos.map((toDo, index) => (
               <DraggableCard key={toDo} toDo={toDo} index={index}></DraggableCard>
             ))}
