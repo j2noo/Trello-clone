@@ -11,11 +11,16 @@ const Card = styled.div<{ $isDragging: boolean }>`
   border-radius: 5px;
   box-shadow: ${(props) =>
     props.$isDragging ? "0px 2px 10px rgba(0, 0, 0, 0.5)" : "none"};
+  &:hover > span {
+    opacity: 1;
+    display: block;
+  }
 `;
 const Delete = styled.span`
   color: red;
-  background-color: yellow;
   float: right;
+  transition: all 0.2s ease-in-out;
+  opacity: 0;
 `;
 interface IDraggableCardProps {
   toDoId: number;
