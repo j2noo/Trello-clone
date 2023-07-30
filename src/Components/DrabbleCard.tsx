@@ -1,6 +1,8 @@
 import React from "react";
 import { Draggable } from "react-beautiful-dnd";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { styled } from "styled-components";
+import { toDoState } from "../atoms";
 const Card = styled.div<{ $isDragging: boolean }>`
   background-color: ${(props) =>
     props.$isDragging ? "#74b9ff" : props.theme.cardColor};
@@ -10,13 +12,26 @@ const Card = styled.div<{ $isDragging: boolean }>`
   box-shadow: ${(props) =>
     props.$isDragging ? "0px 2px 10px rgba(0, 0, 0, 0.5)" : "none"};
 `;
-
+const Delete = styled.span`
+  color: red;
+  background-color: yellow;
+  float: right;
+`;
 interface IDraggableCardProps {
   toDoId: number;
   toDoText: string;
   index: number;
 }
 function DraggableCard({ toDoId, toDoText, index }: IDraggableCardProps) {
+  const [toDos, setToDos] = useRecoilState(toDoState);
+  function deleteClick(toDoId: number) {
+    console.log(toDoId);
+
+    const targetidx = toDos.findIndex((toDo) => toDo.id === toDoId);
+    const copiedToDo = [...toDos];
+    copiedToDo.splice(targetidx, 1);
+    setToDos(copiedToDo);
+  }
   return (
     <Draggable key={toDoId} draggableId={toDoId + ""} index={index}>
       {(provided, snapshot) => (
@@ -27,6 +42,7 @@ function DraggableCard({ toDoId, toDoText, index }: IDraggableCardProps) {
           {...provided.draggableProps}
         >
           {toDoText}
+          <Delete onClick={() => deleteClick(toDoId)}>✖</Delete>
         </Card>
       )}
     </Draggable>
