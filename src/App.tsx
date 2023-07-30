@@ -39,9 +39,12 @@ const Title = styled.span`
   font-size: 40px;
   text-align: center;
 `;
-const ToggleBtn = styled.button`
+const ToggleBtn = styled.span<{ isDark: boolean }>`
   position: absolute;
   left: 65vw;
+  font-size: 40px;
+  transition: 1s ease-in-out;
+  opacity: ${(props) => (props.isDark ? 1 : 0.99)};
 `;
 const Boards = styled.div`
   display: grid;
@@ -141,7 +144,6 @@ function findToDoBeforeIndex(toDos: IToDo[], source: DraggableLocation) {
 function App() {
   const [toDos, setToDos] = useRecoilState(toDoState);
   const [isDark, setisDark] = useRecoilState(isDarkState);
-
   const categorys = useRecoilValue(categoryState); //["To Do","Done","Doing"]
 
   const onDragEnd = (info: DropResult) => {
@@ -163,7 +165,6 @@ function App() {
   };
   function toggleTheme() {
     setisDark((curr) => !curr);
-    console.log(isDark);
   }
   return (
     <>
@@ -173,7 +174,9 @@ function App() {
           <Wrapper>
             <TitleContainer>
               <Title>진우's To Do list</Title>
-              <ToggleBtn onClick={toggleTheme}>toggle</ToggleBtn>
+              <ToggleBtn isDark={isDark} onClick={toggleTheme}>
+                {isDark ? "🌞" : "🌚"}
+              </ToggleBtn>
             </TitleContainer>
 
             <Boards>
