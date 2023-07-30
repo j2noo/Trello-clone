@@ -1,12 +1,37 @@
-import { atom, selector } from "recoil";
-interface IToDoState {
-  [key: string]: string[];
+import { atom, selector, selectorFamily } from "recoil";
+export interface IToDo {
+  id: number;
+  text: string;
+  category: string;
 }
-export const toDoState = atom<IToDoState>({
+
+export const categoryState = atom({
+  key: "category",
+  default: ["To Do", "Doing", "Done"],
+});
+export const toDoState = atom<IToDo[]>({
   key: "toDo",
-  default: {
-    to_do: ["A", "B", "C", "로롤"],
-    doing: ["C잊자자자", "E"],
-    done: ["A가나다라"],
-  },
+  default: [
+    { id: 21, text: "운동하기", category: "To Do" },
+    { id: 2, text: "잠자기", category: "Done" },
+    { id: 3, text: "놀기", category: "Doing" },
+    { id: 4, text: "공부하기", category: "To Do" },
+  ],
+});
+
+export const toDoSelector = selectorFamily({
+  key: "toDoSelector",
+  get:
+    (category: string) =>
+    ({ get }) => {
+      const toDos = get(toDoState);
+      return toDos.filter((toDo) => toDo.category === category);
+    },
+  set:
+    (category: string) =>
+    ({ set, get }, newValue) => {
+      //set에서 selectorFamily 사용도 가능함!
+      const toDos = get(toDoSelector(category));
+      set(toDoState, newValue);
+    },
 });
