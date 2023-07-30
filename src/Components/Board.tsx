@@ -3,8 +3,8 @@ import DraggableCard from "./DrabbleCard";
 import { styled } from "styled-components";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
-import { IToDo, toDoState } from "../atoms";
-import { useSetRecoilState } from "recoil";
+import { IToDo, toDoSelector, toDoState } from "../atoms";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 const Wrapper = styled.div`
   padding-top: 10px;
@@ -40,8 +40,7 @@ const Form = styled.form`
   }
 `;
 interface IBoardProps {
-  toDos: IToDo[];
-  boardId: string;
+  category: string;
 }
 interface IAreaProps {
   $isDraggingFromThis: boolean;
@@ -51,26 +50,33 @@ interface IAreaProps {
 interface IForm {
   toDo: string;
 }
-function Board({ toDos, boardId }: IBoardProps) {
-  const setToDos = useSetRecoilState(toDoState);
+function Board({ category }: IBoardProps) {
+  const [allToDos, setAllToDos] = useRecoilState(toDoState);
+  const [toDos, setToDos] = useRecoilState(toDoSelector(category));
   const { register, setValue, handleSubmit } = useForm<IForm>();
   const onValid = (data: IForm) => {
-    // console.log(data, toDos);
-    const newToDoArray = [...toDos, { id: Date.now(), text: data.toDo }];
-    setToDos((oldToDos) => ({ ...oldToDos, [boardId]: newToDoArray }));
+    setAllToDos((oldAllToDos) => [
+      ...oldAllToDos,
+      {
+        id: Date.now(),
+        text: data.toDo,
+        category: category,
+      },
+    ]);
     setValue("toDo", "");
+    console.log(allToDos);
   };
   return (
     <Wrapper>
-      <Title>{boardId}</Title>
+      <Title>{category}</Title>
       <Form onSubmit={handleSubmit(onValid)}>
         <input
           type="text"
-          placeholder={`${boardId}에 추가하세요`}
+          placeholder={`${category}에 추가하세요`}
           {...register("toDo", { required: true })}
         ></input>
       </Form>
-      <Droppable droppableId={boardId}>
+      <Droppable droppableId={category}>
         {(provided, snapshot) => (
           <Area
             $isDraggingOver={snapshot.isDraggingOver}

@@ -17,7 +17,6 @@ const Wrapper = styled.div`
 `;
 function AddBoard() {
   const [toDos, setToDos] = useRecoilState(toDoState);
-  console.log(toDos);
   function addClick() {
     const newCategory = prompt("추가할 카테고리를 입력하세요");
     if (newCategory === null) {
