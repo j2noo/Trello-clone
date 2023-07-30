@@ -8,6 +8,7 @@ const Card = styled.div<{ $isDragging: boolean }>`
     props.$isDragging ? "#74b9ff" : props.theme.cardColor};
   padding: 10px 10px;
   margin-bottom: 5px;
+  transition: ease-in-out 1s;
   border-radius: 5px;
   box-shadow: ${(props) =>
     props.$isDragging ? "0px 2px 10px rgba(0, 0, 0, 0.5)" : "none"};

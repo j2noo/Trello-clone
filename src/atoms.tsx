@@ -35,3 +35,5 @@ export const toDoSelector = selectorFamily({
       set(toDoState, newValue);
     },
 });
+
+export const isDarkState = atom({ key: "darkTheme", default: false });
