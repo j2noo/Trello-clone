@@ -2,13 +2,14 @@ import React from "react";
 import {
   DragDropContext,
   Draggable,
+  DraggableLocation,
   Droppable,
   DropResult,
   OnDragEndResponder,
 } from "react-beautiful-dnd";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { styled } from "styled-components";
-import { categoryState, toDoSelector, toDoState } from "./atoms";
+import { categoryState, IToDo, toDoSelector, toDoState } from "./atoms";
 import DraggableCard from "./Components/DrabbleCard";
 import Board from "./Components/Board";
 import AddBoard from "./Components/AddBoard";
@@ -29,43 +30,50 @@ const Boards = styled.div`
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
 `;
-
+function findToDoIndex(toDos: IToDo[], source: DraggableLocation) {
+  let count = -1;
+  for (let i = 0; i < toDos.length; i++) {
+    if (toDos[i].category === source.droppableId) {
+      count += 1;
+      if (count === source.index) return i;
+    }
+  }
+  console.log("findToDoIndex Error");
+  return -2221;
+}
+function findToDoBeforeIndex(toDos: IToDo[], source: DraggableLocation) {
+  if (source.index == 0) return 0;
+  let count = 0;
+  for (let i = 0; i < toDos.length; i++) {
+    if (toDos[i].category === source.droppableId) {
+      count += 1;
+      if (count === source.index) return i + 1;
+    }
+  }
+  console.log("findToDoIndex Error");
+  return -2221;
+}
 function App() {
   const [toDos, setToDos] = useRecoilState(toDoState);
 
   const categorys = useRecoilValue(categoryState); //["To Do","Done","Doing"]
 
   const onDragEnd = (info: DropResult) => {
-    // if (!info.destination) return;
-    // const toDos_target = [...toDos[info.source.droppableId]];
-    // const toDos_dest = [...toDos[info.destination?.droppableId]];
-    // const movedToDo = toDos_target.splice(info.source.index, 1);
-    // console.log(toDos_target);
-    // if (info.source.droppableId === info.destination?.droppableId) {
-    //   toDos_target.splice(info.destination?.index, 0, {
-    //     id: movedToDo[0].id,
-    //     text: movedToDo[0].text,
-    //   });
-    //   setToDos((oldToDos) => ({
-    //     ...oldToDos,
-    //     [info.source.droppableId]: toDos_target,
-    //   }));
-    // } else {
-    //   toDos_dest.splice(info.destination?.index, 0, {
-    //     id: movedToDo[0].id,
-    //     text: movedToDo[0].text,
-    //   });
-    //   setToDos((oldToDos) => ({
-    //     ...oldToDos,
-    //     [String(info.destination?.droppableId)]: toDos_dest,
-    //     [info.source.droppableId]: toDos_target,
-    //   }));
-    // }
-    // toDos_dest.splice(info.destination?.index, 0, info.draggableId);
-    // let newToDos = [...toDos];
-    // newToDos.splice(source.index, 1);
-    // newToDos.splice(destination?.index, 0, draggableId);
-    // setToDos(newToDos);
+    console.log(info);
+    if (!info.destination) return;
+    const toDo_targetIndex = findToDoIndex(toDos, info.source);
+    const toDos_copy = [...toDos];
+    const movedToDo = toDos_copy.splice(toDo_targetIndex, 1);
+
+    const toDo_destIndex = findToDoBeforeIndex(toDos_copy, info.destination);
+
+    toDos_copy.splice(toDo_destIndex, 0, {
+      ...movedToDo[0],
+      category: info.destination.droppableId,
+    });
+    console.log(toDos, toDo_targetIndex, toDo_destIndex);
+    setToDos(toDos_copy);
+    console.log(toDos_copy, toDo_targetIndex, toDo_destIndex);
   };
   return (
     <>
@@ -74,7 +82,7 @@ function App() {
         <Wrapper>
           <Boards>
             {categorys.map((category) => (
-              <Board category={category}></Board>
+              <Board key={category} category={category}></Board>
             ))}
 
             <AddBoard></AddBoard>
