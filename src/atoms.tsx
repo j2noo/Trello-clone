@@ -12,7 +12,7 @@ export const categoryState = atom({
 export const toDoState = atom<IToDo[]>({
   key: "toDo",
   default: [
-    { id: 1, text: "운동하기", category: "To Do" },
+    { id: 21, text: "운동하기", category: "To Do" },
     { id: 2, text: "잠자기", category: "Done" },
     { id: 3, text: "놀기", category: "Doing" },
     { id: 4, text: "공부하기", category: "To Do" },
