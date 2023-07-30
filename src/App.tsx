@@ -15,7 +15,6 @@ import Board from "./Components/Board";
 import AddBoard from "./Components/AddBoard";
 
 const Wrapper = styled.div`
-  display: flex;
   max-width: 680px;
   width: 100%;
   margin: 0 auto;
@@ -23,10 +22,15 @@ const Wrapper = styled.div`
   align-items: start;
   height: 100vh;
 `;
+const Title = styled.div`
+  font-size: 40px;
+  text-align: center;
+  margin-top: 5vh;
+`;
 const Boards = styled.div`
   display: grid;
   width: 100%;
-  margin-top: 10vh;
+  margin-top: 5vh;
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
 `;
@@ -80,6 +84,7 @@ function App() {
       {/* <GlobalStyle></GlobalStyle> */}
       <DragDropContext onDragEnd={onDragEnd}>
         <Wrapper>
+          <Title>진우's To Do list</Title>
           <Boards>
             {categorys.map((category) => (
               <Board key={category} category={category}></Board>
