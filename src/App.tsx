@@ -44,7 +44,7 @@ const ToggleBtn = styled.span<{ isDark: boolean }>`
   left: 65vw;
   font-size: 40px;
   transition: 1s ease-in-out;
-  opacity: ${(props) => (props.isDark ? 1 : 0.99)};
+  opacity: ${(props) => (props.isDark ? 1 : 0.98)};
 `;
 const Boards = styled.div`
   display: grid;
